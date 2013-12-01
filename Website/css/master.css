@@ -1,0 +1,144 @@
+/*
+
+NOT ENOUGH MODS MINECRAFT MODDING COMMUNITY
+
+Design Name: NEM 
+Team: Evo (Design), Pyker (Developer), Genpage (Developer)
+Credits: Tivec, Vidplace7, pokemane, theZorro266
+
+URL: www.notenoughmods.com
+
+*/
+
+
+/* GENERAL */
+/* ----------------------------------------- */
+
+html, body{
+    min-height: 100%;
+    height: auto !important;
+    margin: 0 auto -50px;
+    height:100%;
+	background: url(../img/main-bg-tile.png) top left repeat;
+	color:rgb(122,122,109);
+    
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.428571429;
+    background-color: #ffffff;
+}
+
+/* FANCY LOGO IS FANCY */
+/* ----------------------------------------- */
+#logo {
+    display: block;
+    position: relative;
+    top:10px;
+    max-height:50px;
+}
+#logo .logo-image {
+    margin-left:10%;
+    position: relative;
+    width:106px;
+    height: 32px;
+    float:left;
+}
+#logo .logo-image > div {
+    position: absolute;
+    left: 0;
+    width: 91px;
+    height: 32px;
+}
+#logo .logo-image .blue-logo {
+    background: url('../img/logo.png') 0 0 no-repeat;
+}
+#logo .logo-image .green-logo {
+    opacity: 0.0;
+    background: url('../img/logo-hovered.png') 0 0 no-repeat;
+    z-index: 1;
+}
+#logo .logo-image-hover {
+    font-size:12px;
+    width:230px;
+    color:#FFF;
+    padding-top:8px;
+    opacity:0.0;
+    float:left;
+}
+#updated {
+    position:absolute;
+    top:15px;
+    right:50px;
+    color:#FFF;
+    font-weight: bold;
+}
+/* PANEL BOX CORE */
+/* ----------------------------------------- */
+
+/* Light */
+.panel {
+  position: centre;
+  margin-left:10%;
+  margin-right:10%;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+          box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.panel-box-list{} /* Un-ordered List panel */
+.panel-box-list ul{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.panel-box-list li{
+    font-weight:bold;
+    font-size:14px;
+    padding:8px 10px 8px 10px;
+    border-bottom:1px solid rgb(230,230,227);
+}
+/* STRUCTURE */
+/* ----------------------------------------- */
+
+#pribar{
+	height:52px;
+	background: url(../img/pribar-bg.png) top left repeat-x;
+	border-bottom:1px solid rgb(28,29,32);
+}
+
+#footer{
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+	background: url(../img/secbar-bg.png) left repeat-x;
+	border-top:3px solid rgb(82,84,92);
+}
+#footer p{
+	padding-top:12px;
+	color:rgb(169,169,158);
+	text-shadow: 1px 1px 0px rgb(52,54,58);
+	font-weight: bold;
+    text-align:center;
+}
+
+/* LIST */
+/* --------------------------------------- */
+th {
+    text-align:left;
+    font-weight: bold;
+    color:#111111;
+}
+a {
+    color: #428bca;
+    text-decoration: none;
+}
+
+.name{width:25%;font-weight:700;}
+.aliases{width:14%;font-weight:700;}
+.version{width:14%;font-weight:700;}
+.dev{width:14%;font-weight:700;}
+.previous{width:14%;font-weight:700;}
+.comment{font-weight:700;}
