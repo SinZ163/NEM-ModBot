@@ -44,8 +44,10 @@
                 <table>
                   <thead><tr>
                     <th>Mod Name</th>
+                    <th>Aliases</th>
+                    <th>Author</th>
                     <th>Version</th>
-                    <th>Previous</th>
+                    <th>Dev Version</th>
                     <th>Comment</th>
                   </tr></thead>
                   <tbody>
