@@ -37,11 +37,11 @@ class ModBot():
             
     def compileHTML(self, version):
         with open("commands/NEM/website/"+version+".html", "w") as f:
-            timeStamp = datetime.datetime.utcnow().strftime("%Y-%m-$d %H:%M:%S")
-            timeStampedInfo = re.sub("|UPDATE_TIME|", timeStamp, self.htmlData["header"])
+            timeStamp = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+            timeStampedInfo = re.sub("~UPDATE_TIME~", timeStamp, self.htmlData["header"])
             print(self.lists[version])
             print(str(type(self.lists[version])))
-            f.write(re.sub("|MOD_COUNT|", str(len(self.lists[version])), timeStampedInfo))
+            f.write(re.sub("~MOD_COUNT~", str(len(self.lists[version])), timeStampedInfo))
             for modName, info in self.lists[version].iteritems():
                 f.write("""
   <tr>

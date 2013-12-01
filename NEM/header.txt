@@ -22,7 +22,7 @@
                   </a>
                 </div>
                 <div id="updated">
-                    Recent changes (updated 2013-11-26 07:55:46 UTC)
+                    Recent changes (updated ~UPDATE_TIME~ UTC)
                 </div>
             </div>
         </div>
@@ -37,7 +37,7 @@
             <div class="panel">
                 <div class="panel-box-list">
                     <ul>
-                        <li><span class="box-list-right"><caption>Full Mod List (|MOD_COUNT| Mods)</caption></span></li>
+                        <li><span class="box-list-right"><caption>Full Mod List (~MOD_COUNT~ Mods)</caption></span></li>
                         <li></li>
                     </ul>
                 </div>
