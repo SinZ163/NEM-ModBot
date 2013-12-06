@@ -62,3 +62,9 @@ def execute(self, name, params, channel, userdata, rank):
         except Exception as e:
             self.sendChatMessage(self.send, channel, str(e))
             traceback.print_exc()
+    elif params[0] == "save":
+        try:
+            modbot.saveList(params[1])
+        except Exception as e:
+            self.sendChatMessage(self.send,channel,str(e))
+            traceback.print_exc()
