@@ -20,29 +20,39 @@ class ModBot():
         
         #load html template into memory (faster than loading it every time maybe?
         for fileName in ["header","breaker","footer"]:
-            with open("commands/NEM/"+fileName+".txt", "r") as f:
+            with open("commands/modbot.mca.d3s.co/"+fileName+".txt", "r") as f:
                 self.htmlData[fileName] = f.read()
     def readDisk(self):
-        fileList = os.listdir("commands/NEM/")
+        fileList = os.listdir("commands/modbot.mca.d3s.co/htdocs/")
         for fileName in fileList:
             if fileName[-5:] == ".json":
-                with open("commands/NEM/"+fileName,"r") as f:
+                with open("commands/modbot.mca.d3s.co/htdocs/"+fileName,"r") as f:
                     version = fileName[:-5]
                     fileInfo = f.read()
-                    self.lists[version] = simplejson.loads(fileInfo, strict = False)
+                    rawOutput = simplejson.loads(fileInfo, strict = False)
+                    self.lists[version] = {}
+                    for modInfo in rawOutput:
+                        modName = modInfo["name"]
+                        del modInfo["name"]
+                        self.lists[version][modName] = modInfo
                     
     def saveList(self, version):
-        with open("commands/NEM/"+version+".json", "w") as f:
-            f.write(simplejson.dumps(self.lists[version], sort_keys=True, indent=4 * ' '))
+        with open("commands/modbot.mca.d3s.co/htdocs/"+version+".json", "w") as f:
+            output = []
+            rawOutput = self.lists[version]
+            for key, value in sorted(rawOutput.iteritems()):
+                value["name"] = key
+                output.append(value)
+            f.write(simplejson.dumps(output, sort_keys=True, indent=4 * ' '))
             
     def compileHTML(self, version):
-        with open("commands/NEM/website/"+version+".html", "w") as f:
+        with open("commands/modbot.mca.d3s.co/htdocs/"+version+".html", "w") as f:
             timeStamp = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
             timeStampedInfo = re.sub("~UPDATE_TIME~", timeStamp, self.htmlData["header"])
-            print(self.lists[version])
-            print(str(type(self.lists[version])))
+            #print(self.lists[version])
+            #print(str(type(self.lists[version])))
             f.write(re.sub("~MOD_COUNT~", str(len(self.lists[version])), timeStampedInfo))
-            for modName, info in self.lists[version].iteritems():
+            for modName, info in sorted(self.lists[version].iteritems()):
                 f.write("""
   <tr>
     <td class='name'><a href='{}' target='_blank'>{}</a></td>
