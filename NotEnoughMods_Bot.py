@@ -63,18 +63,49 @@ class ModBot():
     <td class='comment'>{}</td>
   </tr>""".format(info["longurl"],modName,info["aliases"],info["author"],info["version"],info["dev"],info["comment"]))
             f.write(self.htmlData["footer"])
-modbot = ModBot()
             
+            
+modbot = ModBot()
+
 def execute(self, name, params, channel, userdata, rank):
-    if params[0] == "compile":
-        try:
-            modbot.compileHTML(params[1])
-        except Exception as e:
-            self.sendChatMessage(self.send, channel, str(e))
-            traceback.print_exc()
-    elif params[0] == "save":
-        try:
-            modbot.saveList(params[1])
-        except Exception as e:
-            self.sendChatMessage(self.send,channel,str(e))
-            traceback.print_exc()
+    try:
+        if rankTranslate[rank] >= commands[params[0]]["rank"]:
+            command = commands[params[0]]["function"]
+            command(self, name, params, channel, userdata, rank)
+        else:
+            self.sendNotice(name, "You do not have permissions for this command!")
+    except KeyError:
+        self.sendChatMessage(self.send, channel, "invalid command!")
+        self.sendChatMessage(self.send, channel, "see =modbot help for a list of commands")
+        
+def command_compile(self, name, params, channel, userdata, rank):
+    try:
+        modbot.compileHTML(params[1])
+    except Exception as e:
+        self.sendChatMessage(self.send, channel, str(e))
+        traceback.print_exc()
+def command_save(self, name, params, channel, userdata, rank):
+    try:
+        modbot.saveList(params[1])
+    except Exception as e:
+        self.sendChatMessage(self.send,channel,str(e))
+        traceback.print_exc()
+        
+rankTranslate = {
+    "" : 0,
+    "+" : 1,
+    "@" : 2,
+    "@@" : 3
+}
+commands = {
+    "compile" : {
+        "function" : command_compile,
+        "rank" : 2,
+        "help" : ["<version>", "Debug command for generating the HTML pages"]
+    },
+    "save" : {
+        "function" : command_save,
+        "rank" : 2,
+        "help" : ["<version>", "Debug command for generating the JSON files"]
+    }
+}
