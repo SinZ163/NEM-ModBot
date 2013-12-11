@@ -6,6 +6,17 @@ import traceback
 
 ID = "modbot"
 permission = 0
+
+darkgreen = "03"
+red = "05"
+purple = "06"
+orange = "7"
+blue = "12"
+pink = "13"
+gray = "14"
+bold = unichr(2)
+colour = unichr(3)
+
 class ModBot():
     lists = {}
     current = ""
@@ -74,7 +85,8 @@ def execute(self, name, params, channel, userdata, rank):
             command(self, name, params, channel, userdata, rank)
         else:
             self.sendNotice(name, "You do not have permissions for this command!")
-    except KeyError:
+    except KeyError as e:
+        self.sendChatMessage(self.send, channel, str(e))
         self.sendChatMessage(self.send, channel, "invalid command!")
         self.sendChatMessage(self.send, channel, "see =modbot help for a list of commands")
         
@@ -90,6 +102,51 @@ def debug_save(self, name, params, channel, userdata, rank):
     except Exception as e:
         self.sendChatMessage(self.send,channel,str(e))
         traceback.print_exc()
+def command_help(self, name, params, channel, userdata, rank):
+    actualRank = rankTranslate[rank]
+    paramCount = len(params)
+    if paramCount > 1:
+        #ok, info on a command, let's go!
+        if params[1] in commands:
+            commandInfo = commands[params[1]]
+            if actualRank < commandInfo["rank"]:
+                self.sendNotice(name, "You do not have permission for this command.")
+                return
+            if paramCount > 2:
+                param = " ".join(params[2:])
+                #We want info on an argument
+                argInfo = {}
+                for arg in commandInfo["args"]:
+                    if param == arg["name"]:
+                        argInfo = arg
+                        break
+                self.sendNotice(name, argInfo["description"])
+            else: #just the command
+                #Lets compile the argStuff
+                argStuff = ""
+                argCount = len(commandInfo["args"])
+                if argCount > 0:
+                    for arg in commandInfo["args"]:
+                        if arg["required"]:
+                            argStuff = argStuff + " <" + arg["name"] + ">"
+                        else:
+                            argStuff = argStuff + " [" + arg["name"] + "]"
+                #Send to IRC
+                self.sendNotice(name, commandInfo["help"])
+                self.sendNotice(name, "Use case: "+self.cmdprefix+ID+" "+params[1]+argStuff)
+        else:
+            self.sendNotice(name, "That isn't a command...")
+            return
+    else:
+        #List the commands
+                        #0,  1,  2,  3
+        commandRanks = [[], [], [], []]
+        for command, info in commands.iteritems():
+            commandRanks[info["rank"]].append(command)
+        
+        self.sendNotice(name, "Available commands:")
+        for i in range(0,actualRank):
+            self.sendNotice(name, nameTranslate[i]+": "+", ".join(commandRanks[i]))
 def command_show(self, name, params, channel, userdata, rank):
     if len(params) < 2:
         self.sendChatMessage(self.send, channel, name+ ": Insufficent amount of parameters provided.")
@@ -105,16 +162,7 @@ def command_show(self, name, params, channel, userdata, rank):
             #TODO: search aliases here
             self.sendChatMessage(self.send, channel, "Mod not found.")
             return
-       
-        darkgreen = "03"
-        red = "05"
-        purple = "06"
-        orange = "7"
-        blue = "12"
-        pink = "13"
-        gray = "14"
-        bold = unichr(2)
-        colour = unichr(3)
+      
         alias = colour
         if data[params[1]]["aliases"] != "":
             alias = colour+"("+colour+pink+str(re.sub(" ", colour+', '+colour+pink, data[params[1]]["aliases"]))+colour+") "
@@ -133,6 +181,18 @@ def command_show(self, name, params, channel, userdata, rank):
     except Exception as error:
         self.sendChatMessage(self.send, channel, name+": "+str(error))
         traceback.print_exc()
+def command_setlist(self, name, params, channel, userdata, rank):
+    if len(params) != 2:
+        self.sendChatMessage(self.send, channel, name+ ": Insufficent amount of parameters provided.")
+        self.sendChatMessage(self.send, channel, name+ ": "+help["setlist"][1])
+    else:        
+        colourblue = unichr(2)+unichr(3)+"12"
+        colour = unichr(3)+unichr(2)
+        if (str(params[1]) in modbot.lists) or rankTranslate[rank] >= 2:
+            modbot.current = str(params[1])
+            self.sendChatMessage(self.send, channel, "switched list to: "+colourblue+params[1]+colour)
+        else:
+            self.sendNotice(name, "Invalid list and not op, ignoring.")
         
 rankTranslate = {
     "" : 0,
@@ -140,6 +200,12 @@ rankTranslate = {
     "@" : 2,
     "@@" : 3
 }
+nameTranslate = [
+    "Guest",
+    "Voice",
+    "Operator",
+    "Bot Admin"
+]
 commands = {
     "compile" : {
         "function" : debug_compile,
@@ -165,6 +231,18 @@ commands = {
             }
         ]
     },
+    "help" : {
+        "function" : command_help,
+        "rank" : 0,
+        "help" : "Shows this info..?",
+        "args" : [
+            {
+                "name" : "command",
+                "description" : "The command you want info for",
+                "required" : False
+            }
+        ]
+    },
     "show" : {
         "function" : command_show,
         "rank" : 0,
@@ -178,6 +256,18 @@ commands = {
                 "name" : "version",
                 "description" : "The MC version to search in.",
                 "required" : False
+            }
+        ]
+    },
+    "setlist" : {
+        "function" : command_setlist,
+        "rank" : 1,
+        "help" : "Sets the current list.",
+        "args" : [
+            {
+                "name" : "version",
+                "description" : "the MC version to set current to.",
+                "required" : True
             }
         ]
     }
