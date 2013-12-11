@@ -195,6 +195,8 @@ def command_setlist(self, name, params, channel, userdata, rank):
             self.sendNotice(name, "Invalid list and not op, ignoring.")
 def command_listall(self, name, params, channel, userdata, rank):
     self.sendNotice(name, "http://modbot.mca.d3s.co/")
+def command_current(self, name, params, channel, userdata, rank):
+    self.sendNotice(name, "Current list: "+bold+colour+blue+modbot.current+colour+bold+" ("+str(len(modbot.lists[modbot.current]))+" mods)")
 rankTranslate = {
     "" : 0,
     "+" : 1,
@@ -280,6 +282,12 @@ commands = {
         "function" : command_listall,
         "rank" : 0,
         "help" : "Gives the URL for the website.",
+        "args" : []
+    },
+    "current" : {
+        "function" : command_current,
+        "rank" : 0,
+        "help" : "Returns the current list being used.",
         "args" : []
     }
 }
