@@ -150,7 +150,6 @@ def command_help(self, name, params, channel, userdata, rank):
 def command_show(self, name, params, channel, userdata, rank):
     if len(params) < 2:
         self.sendChatMessage(self.send, channel, name+ ": Insufficent amount of parameters provided.")
-        self.sendChatMessage(self.send, channel, name+ ": "+help["list"][1])
         return
     if len(params) >= 3:
         version = params[2]
@@ -168,7 +167,7 @@ def command_show(self, name, params, channel, userdata, rank):
             alias = colour+"("+colour+pink+str(re.sub(" ", colour+', '+colour+pink, data[params[1]]["aliases"]))+colour+") "
         comment = colour
         if data[params[1]]["comment"] != "":
-            comment = str(colour+"("+colour+gray+data[params[1]]["comment"]+colour+") ")
+            comment = str(colour+"["+colour+gray+data[params[1]]["comment"]+colour+"] ")
         dev = colour
         try:
             if data[params[1]]["dev"] != "":
@@ -180,6 +179,21 @@ def command_show(self, name, params, channel, userdata, rank):
         self.sendChatMessage(self.send, channel, colour+purple+params[1]+" "+alias+colour+darkgreen+data[params[1]]["version"]+dev+" "+comment+colour+orange+data[params[1]]["shorturl"]+colour)  
     except Exception as error:
         self.sendChatMessage(self.send, channel, name+": "+str(error))
+        traceback.print_exc()
+def command_multilist(self, name, params, channel, userdata, rank):
+    if len(params) != 2:
+        self.sendNotice(name, "Insufficient amount of parameters provided.")
+        return
+    try:
+        lists = {}
+        for version, db in modbot.lists.iteritems():
+            if params[1] in db:
+                lists[version] = db[params[1]]
+        self.sendNotice(name, "Listing "+bold+colour+blue+str(len(lists))+colour+bold+" MC versions for: "+colour+purple+params[1]+colour)
+        for version, info in lists.iteritems():
+            self.sendNotice(name, "["+bold+colour+blue+version+colour+bold+"] "+" ".join([colour+purple+params[1]+colour, colour+darkgreen+info["version"]+colour, "["+colour+gray+"dev"+colour+": "+colour+red+info["dev"]+"]"+colour, "("+colour+gray+info["comment"]+colour+")", colour+orange+info["shorturl"]+colour]))
+    except Exception as error:
+        print(error)
         traceback.print_exc()
 def command_setlist(self, name, params, channel, userdata, rank):
     if len(params) != 2:
@@ -263,6 +277,18 @@ commands = {
                 "name" : "version",
                 "description" : "The MC version to search in.",
                 "required" : False
+            }
+        ]
+    },
+    "multilist" : {
+        "function" : command_multilist,
+        "rank" : 0,
+        "help" : "Does a direct search for the mod across every MC version",
+        "args" : [
+            {
+                "name" : "mod name",
+                "description" : "the mod to output info of",
+                "required" : True
             }
         ]
     },
