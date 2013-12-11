@@ -193,7 +193,8 @@ def command_setlist(self, name, params, channel, userdata, rank):
             self.sendChatMessage(self.send, channel, "switched list to: "+colourblue+params[1]+colour)
         else:
             self.sendNotice(name, "Invalid list and not op, ignoring.")
-        
+def command_listall(self, name, params, channel, userdata, rank):
+    self.sendNotice(name, "http://modbot.mca.d3s.co/")
 rankTranslate = {
     "" : 0,
     "+" : 1,
@@ -274,5 +275,11 @@ commands = {
                 "required" : True
             }
         ]
+    },
+    "listall" : {
+        "function" : command_listall,
+        "rank" : 0,
+        "help" : "Gives the URL for the website.",
+        "args" : []
     }
 }
