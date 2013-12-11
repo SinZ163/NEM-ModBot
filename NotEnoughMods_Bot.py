@@ -240,6 +240,10 @@ commands = {
                 "name" : "command",
                 "description" : "The command you want info for",
                 "required" : False
+            },{
+                "name" : "arg",
+                "description" : "The argument you want info for",
+                "required" : False
             }
         ]
     },
