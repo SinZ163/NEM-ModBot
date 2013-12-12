@@ -7,6 +7,9 @@ import traceback
 ID = "modbot"
 permission = 0
 
+mainChannel = "#test"
+mainPrefix = "^"
+
 darkgreen = "03"
 red = "05"
 purple = "06"
@@ -78,6 +81,32 @@ class ModBot():
             
 modbot = ModBot()
 
+def __initialize__(self, Startup):
+    if self.events["chat"].doesExist("ModBot"):
+        self.events["chat"].removeEvent("ModBot")
+    self.events["chat"].addEvent("ModBot", onPrivmsg, [mainChannel])
+    
+def onPrivmsg(self, channels, userdata, message, currChannel):
+    if message[0] == mainPrefix:
+        params = message.split(" ")
+        params[0] = params[0][1:]
+    else:
+        return
+    if currChannel:
+        channel = currChannel
+    else:
+        channel = userdata["name"]
+    rank = self.userGetRank(mainChannel,userdata["name"])
+    try:
+        if rankTranslate[rank] >= commands[params[0]]["rank"]:
+            command = commands[params[0]]["function"]
+            command(self, userdata["name"], params, channel, userdata, rank)
+        else:
+            self.sendNotice(userdata["name"], "You do not have permissions for this command!")
+    except KeyError as e:
+        self.sendChatMessage(self.send, channel, str(e))
+        self.sendChatMessage(self.send, channel, "invalid command!")
+        self.sendChatMessage(self.send, channel, "see "+mainPrefix+"help for a list of commands")
 def execute(self, name, params, channel, userdata, rank):
     try:
         if rankTranslate[rank] >= commands[params[0]]["rank"]:
@@ -191,7 +220,16 @@ def command_multilist(self, name, params, channel, userdata, rank):
                 lists[version] = db[params[1]]
         self.sendNotice(name, "Listing "+bold+colour+blue+str(len(lists))+colour+bold+" MC versions for: "+colour+purple+params[1]+colour)
         for version, info in lists.iteritems():
-            self.sendNotice(name, "["+bold+colour+blue+version+colour+bold+"] "+" ".join([colour+purple+params[1]+colour, colour+darkgreen+info["version"]+colour, "["+colour+gray+"dev"+colour+": "+colour+red+info["dev"]+"]"+colour, "("+colour+gray+info["comment"]+colour+")", colour+orange+info["shorturl"]+colour]))
+            message = "["+bold+colour+blue+version+colour+bold+"] " #Version
+            message = message + colour+purple+params[1]+colour + " " #Name
+            if info["aliases"] != "":
+                message = message + colour+"("+colour+pink+str(re.sub(" ", colour + ', '+colour+pink, info["aliases"]))+colour + ") " #Alias
+            message = message + colour+darkgreen+info["version"]+colour + " " #Release version
+            if info["dev"] != "":
+                message = message + "["+colour+gray+"dev"+colour+": "+colour+red+info["dev"]+"] "+colour #Dev Version
+            if info["comment"] != "":
+                message = message + "("+colour+gray+info["comment"]+colour+") " #Comment
+            self.sendNotice(name, message + colour+orange+info["shorturl"]+colour)
     except Exception as error:
         print(error)
         traceback.print_exc()
@@ -211,6 +249,7 @@ def command_listall(self, name, params, channel, userdata, rank):
     self.sendNotice(name, "http://modbot.mca.d3s.co/")
 def command_current(self, name, params, channel, userdata, rank):
     self.sendNotice(name, "Current list: "+bold+colour+blue+modbot.current+colour+bold+" ("+str(len(modbot.lists[modbot.current]))+" mods)")
+    
 rankTranslate = {
     "" : 0,
     "+" : 1,
