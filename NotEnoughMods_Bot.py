@@ -33,7 +33,7 @@ class ModBot():
         self.current = sortedList[len(sortedList)-1]
         
         #load html template into memory (faster than loading it every time maybe?
-        for fileName in ["header","breaker","footer"]:
+        for fileName in ["template","modEntry"]:
             with open("commands/modbot.mca.d3s.co/"+fileName+".txt", "r") as f:
                 self.htmlData[fileName] = f.read()
     def readDisk(self):
@@ -60,24 +60,16 @@ class ModBot():
             f.write(simplejson.dumps(output, sort_keys=True, indent=4 * ' '))
             
     def compileHTML(self, version):
+        timeStamp = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+        modCount = str(len(self.lists[version]))
+        modEntryString = ""
+        for modName, info in sorted(self.lists[version].iteritems()):
+            info["name"] = modName
+            modEntryString = modEntryString + self.htmlData["modEntry"].format(**info)
+        
+        toWrite = self.htmlData["template"].format(timeStamp=timeStamp,modCount=modCount,modEntry=modEntryString)
         with open("commands/modbot.mca.d3s.co/htdocs/"+version+".html", "w") as f:
-            timeStamp = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
-            timeStampedInfo = re.sub("~UPDATE_TIME~", timeStamp, self.htmlData["header"])
-            #print(self.lists[version])
-            #print(str(type(self.lists[version])))
-            f.write(re.sub("~MOD_COUNT~", str(len(self.lists[version])), timeStampedInfo))
-            for modName, info in sorted(self.lists[version].iteritems()):
-                f.write("""
-  <tr>
-    <td class='name'><a href='{}' target='_blank'>{}</a></td>
-    <td class='aliases'>{}</td>
-    <td class='author'>{}</td>
-    <td class='version'>{}</td>
-    <td class='dev'>{}</td>
-    <td class='comment'>{}</td>
-  </tr>""".format(info["longurl"],modName,info["aliases"],info["author"],info["version"],info["dev"],info["comment"]))
-            f.write(self.htmlData["footer"])
-            
+            f.write(toWrite)            
             
 modbot = ModBot()
 
@@ -103,10 +95,9 @@ def onPrivmsg(self, channels, userdata, message, currChannel):
             command(self, userdata["name"], params, channel, userdata, rank)
         else:
             self.sendNotice(userdata["name"], "You do not have permissions for this command!")
-    except KeyError as e:
-        self.sendChatMessage(self.send, channel, str(e))
-        self.sendChatMessage(self.send, channel, "invalid command!")
-        self.sendChatMessage(self.send, channel, "see "+mainPrefix+"help for a list of commands")
+    except KeyError:
+        pass
+        #Doing a message if someone started their message with the prefix is bad
 def execute(self, name, params, channel, userdata, rank):
     try:
         if rankTranslate[rank] >= commands[params[0]]["rank"]:

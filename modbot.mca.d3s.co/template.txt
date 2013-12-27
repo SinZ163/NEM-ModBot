@@ -22,7 +22,7 @@
                   </a>
                 </div>
                 <div id="updated">
-                    Recent changes (updated ~UPDATE_TIME~ UTC)
+                    Recent changes (updated {timeStamp} UTC)
                 </div>
             </div>
         </div>
@@ -37,7 +37,7 @@
             <div class="panel">
                 <div class="panel-box-list">
                     <ul>
-                        <li><span class="box-list-right"><caption>Full Mod List (~MOD_COUNT~ Mods)</caption></span></li>
+                        <li><span class="box-list-right"><caption>Full Mod List ({modCount} Mods)</caption></span></li>
                         <li></li>
                     </ul>
                 </div>
@@ -51,3 +51,25 @@
                     <th>Comment</th>
                   </tr></thead>
                   <tbody>
+                  {modEntry}
+                  </tbody>
+                </table>
+            </div>
+        </div> <!-- END Central Content -->
+    </div> <!--END row -->
+</div> <!-- END container -->
+<div id="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+            <p>Copyright &copy; 2013 Not Enough Mods. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+</div>
+
+<!-- JavaScript includes -->
+<script src="http://code.jquery.com/jquery.min.js"></script>
+<script type="text/javascript" src="./js/code.js"></script> 
+
+</body></html>

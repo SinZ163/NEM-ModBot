@@ -1,0 +1,8 @@
+  <tr>
+    <td class='name'><a href='{longurl}' target='_blank'>{name}</a></td>
+    <td class='aliases'>{aliases}</td>
+    <td class='author'>{author}</td>
+    <td class='version'>{version}</td>
+    <td class='dev'>{dev}</td>
+    <td class='comment'>{comment}</td>
+  </tr>
