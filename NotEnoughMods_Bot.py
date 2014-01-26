@@ -95,7 +95,7 @@ def onPrivmsg(self, channels, userdata, message, currChannel):
             command(self, userdata["name"], params, channel, userdata, rank)
         else:
             self.sendNotice(userdata["name"], "You do not have permissions for this command!")
-    except KeyError:
+    except (KeyError, IndexError):
         pass
         #Doing a message if someone started their message with the prefix is bad
 def execute(self, name, params, channel, userdata, rank):
@@ -109,6 +109,8 @@ def execute(self, name, params, channel, userdata, rank):
         self.sendChatMessage(self.send, channel, str(e))
         self.sendChatMessage(self.send, channel, "invalid command!")
         self.sendChatMessage(self.send, channel, "see =modbot help for a list of commands")
+    except IndexError:
+        pass
         
 def debug_compile(self, name, params, channel, userdata, rank):
     try:
