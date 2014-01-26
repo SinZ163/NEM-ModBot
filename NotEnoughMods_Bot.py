@@ -79,7 +79,7 @@ def __initialize__(self, Startup):
     self.events["chat"].addEvent("ModBot", onPrivmsg, [mainChannel])
     
 def onPrivmsg(self, channels, userdata, message, currChannel):
-    if message[0] == mainPrefix:
+    if message.startswith(mainPrefix):
         params = message.split(" ")
         params[0] = params[0][1:]
     else:
